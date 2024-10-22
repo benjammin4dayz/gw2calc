@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="user">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Easily calculate the value of your Guild Wars 2 Fractal Relics. Infinite Mist Omnipotion soon™!"
+    />
+    <title>Fractal Relic Calculator</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.16.0/mvp.css" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <style>
+      .flex {
+        display: flex;
+      }
+      .flexcol {
+        flex-direction: column;
+      }
+      .center {
+        align-items: center;
+        justify-content: center;
+      }
+      .calc-output {
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .calc-output {
+          transform: translateY(-100%);
+          transition: transform 0.2s, opacity 0.2s;
+          opacity: 0;
+          z-index: -1;
+        }
+        .calc-output.show {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="flex flexcol center">
+    <h1>Fractal Relic Calculator</h1>
+    <div>
+      <form id="calc-input" class="flex flexcol">
+        <label for="regular">Fractal Relics</label>
+        <input type="number" id="regular" autofocus />
+        <label for="pristine">Pristine Fractal Relics</label>
+        <input type="number" id="pristine" />
+        <label for="desired">Desired Fractal Relics</label>
+        <input type="number" id="desired" />
+        <button type="submit">Calculate</button>
+      </form>
+      <div class="flex">
+        <table class="calc-output" id="calc-output"></table>
+      </div>
+    </div>
+    <footer class="flex flexcol center">
+      Made with 💖 by
+      &#65;&#112;&#97;&#116;&#104;&#121;&#46;&#49;&#56;&#54;&#55;
+    </footer>
+    <script>
+      const $ = selector => document.querySelector(selector);
+      const $value = selector => parseInt($(selector).value) || 0;
+      const $render = (selector, html) => {
+        $(selector).classList.remove('show');
+        setTimeout(() => {
+          $(selector).classList.add('show');
+          $(selector).innerHTML = html
+            .split('\n')
+            .map(line => line.trim())
+            .join('');
+        }, 200);
+      };
+
+      $('#calc-input').addEventListener('submit', e => {
+        e.preventDefault();
+        const regularRelics = $value('input#regular');
+        const pristineRelics = $value('input#pristine');
+        const desiredRelics = $value('input#desired');
+
+        const pristineRelicValue = pristineRelics * 15;
+        const totalRelicValue = regularRelics + pristineRelicValue;
+        const exchangeCount = Math.ceil((desiredRelics - regularRelics) / 15);
+        const leftoverCount = pristineRelics - exchangeCount;
+
+        const canAffordExchange = pristineRelics - exchangeCount > 0;
+
+        $render(
+          '#calc-output',
+          `
+          <tbody>
+            <tr>
+              <td>Pristine Relic Value:</td>
+              <td></td>
+              <td>${pristineRelicValue}</td>
+            </tr>
+            <tr>
+              <td>Total Relic Value:</td>
+              <td></td>
+              <td>${totalRelicValue}</td>
+            </tr>
+            ${
+              exchangeCount > 0
+                ? `
+            <tr>
+              <td>Pristine Exchange:</td>
+              <td></td>
+              <td>
+                <span style="color: ${
+                  canAffordExchange ? 'green' : 'red'
+                }">${exchangeCount}</span>
+              </td>
+            </tr>
+            ${
+              canAffordExchange
+                ? `
+              <tr>
+                <td>Leftover Relics:</td>
+                <td></td>
+                <td>${leftoverCount}</td>
+              </tr>
+              `
+                : ''
+            }
+            `
+                : ''
+            }
+          </tbody>
+          `
+        );
+      });
+    </script>
+    <script>
+      // Progressive Web App (PWA) setup
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .then(registration => {
+            console.debug('Service worker registered:', registration);
+          })
+          .catch(error => {
+            console.debug('Service worker registration failed:', error);
+          });
+      }
+    </script>
+  </body>
+</html>

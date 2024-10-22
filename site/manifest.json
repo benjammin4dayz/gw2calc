@@ -1,0 +1,18 @@
+{
+  "background_color": "#3a3a3a",
+  "description": "Easily calculate the value of your Guild Wars 2 Fractal Relics. Infinite Mist Omnipotion soon™!",
+  "display": "standalone",
+  "icons": [
+    {
+      "purpose": "any",
+      "sizes": "144x144",
+      "src": "/icon.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Fractal Relic Calculator",
+  "scope": "/",
+  "short_name": "GW2-FRCalc",
+  "start_url": "/",
+  "theme_color": "#2b2b2b"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "gw2calc",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "scripts": {
+    "start": "vite site/ --port 3000"
+  },
+  "devDependencies": {
+    "vite": "^5.4.9"
+  }
+}
